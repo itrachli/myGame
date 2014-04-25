@@ -1,11 +1,3 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// GameplayScreen.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
 
 #region Using Statements
 using System;
@@ -14,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using GameStateManagement;
 #endregion
 
@@ -30,7 +23,7 @@ namespace MyGame
 
         ContentManager content;
         SpriteFont gameFont;
-
+        SoundEffect soundEffect;
         Vector2 playerPosition = new Vector2(100, 100);
         Vector2 enemyPosition = new Vector2(100, 100);
 
@@ -71,7 +64,8 @@ namespace MyGame
                     content = new ContentManager(ScreenManager.Game.Services, "Content");
 
                 gameFont = content.Load<SpriteFont>("gamefont");
-
+                soundEffect = content.Load<SoundEffect>("Begin");
+                soundEffect.Play();
                 // A real game would probably have more content than this sample, so
                 // it would take longer to load. We simulate that by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.

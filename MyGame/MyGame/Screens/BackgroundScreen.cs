@@ -1,17 +1,15 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// BackgroundScreen.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
 
 #region Using Statements
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using GameStateManagement;
 #endregion
 
@@ -28,7 +26,15 @@ namespace MyGame
 
         ContentManager content;
         Texture2D backgroundTexture;
-
+        AnimatedTexture SpriteTexture;
+        SoundEffect soundEffect;
+        Song _MainMenu;
+        const float Rotation = 0;
+        const float Scale = 2.0f;
+        const float Depth = 0.5f;
+        const int Frames = 29;
+        const int FramesPerSec = 29;
+        Vector2 AkumaPos;
         #endregion
 
         #region Initialization
@@ -41,6 +47,8 @@ namespace MyGame
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            SpriteTexture = new AnimatedTexture(Vector2.Zero,
+                Rotation, Scale, Depth);
         }
 
 
@@ -57,8 +65,14 @@ namespace MyGame
             {
                 if (content == null)
                     content = new ContentManager(ScreenManager.Game.Services, "Content");
-
+                soundEffect = content.Load<SoundEffect>("Presentation");
+                soundEffect.Play();
+                _MainMenu = content.Load<Song>("Ta-Ku");
+                MediaPlayer.Play(_MainMenu);
+                MediaPlayer.IsRepeating = true;        
                 backgroundTexture = content.Load<Texture2D>("background");
+                SpriteTexture.Load(content, "background_menu", Frames, FramesPerSec);
+                AkumaPos = new Vector2(500, 0);
             }
         }
 
@@ -87,6 +101,10 @@ namespace MyGame
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            
+            SpriteTexture.UpdateFrame(elapsed);
             base.Update(gameTime, otherScreenHasFocus, false);
         }
 
@@ -104,7 +122,7 @@ namespace MyGame
 
             spriteBatch.Draw(backgroundTexture, fullscreen,
                              new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
-
+            SpriteTexture.DrawFrame(spriteBatch, AkumaPos);
             spriteBatch.End();
         }
 

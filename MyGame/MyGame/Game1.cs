@@ -22,7 +22,6 @@ namespace MyGame
         GraphicsDeviceManager graphics;
         ScreenManager screenManager;
         ScreenFactory screenFactory;
-
         SpriteBatch spriteBatch;
 
         public Game1()
